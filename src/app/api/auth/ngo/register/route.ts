@@ -3,9 +3,9 @@ import { NextRequest, NextResponse } from "next/server"
 
 export async function POST(req: NextRequest) {
     const body = await req.json();
-    const { email, password, name, phno, unique_key, address } = body;
+    const { email, password, name} = body;
 
-    if (!email || !password || !name || !phno || !address) {
+    if (!email || !password || !name ) {
         return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
@@ -25,32 +25,12 @@ export async function POST(req: NextRequest) {
             .insert({
                 name: name,
                 email: email,
-                phno: phno,
-                unique_key: unique_key,
                 id: data?.user?.id,
             })
             .single();
 
         if (userError) {
             console.error("Supabase sign-up error:", userError);
-            return NextResponse.json({ error }, { status: 500 });
-        }
-
-        const { data: addressData, error: addressError } = await supabase
-            .from("address")
-            .insert({
-                user_id: data?.user?.id,
-                house_no: address?.house_no,
-                street: address?.street,
-                city: address?.city,
-                state: address?.state,
-                location: address?.location,
-                pincode: address?.pincode
-            })
-            .single();
-
-        if (addressError) {
-            console.error("Supabase sign-up error:", addressError);
             return NextResponse.json({ error }, { status: 500 });
         }
 
