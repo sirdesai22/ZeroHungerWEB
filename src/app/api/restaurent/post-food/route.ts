@@ -1,11 +1,6 @@
 import { supabase } from "@/lib/supabaseClient";
 import { NextRequest, NextResponse } from "next/server";
 
-// GET handler for basic testing
-export async function GET() {
-    return NextResponse.json({ message: "Hello World!" }, { status: 200 });
-}
-
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json(); // Parse request body
