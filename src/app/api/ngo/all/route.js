@@ -4,10 +4,9 @@ import { NextResponse } from 'next/server';
 
 export async function GET(req) {
   try {
-    await connectToDatabase(); // Ensure the database connection is established
-    const ngos = await Ngo.find({}); // Fetch all NGO records
+    await connectToDatabase();
+    const ngos = await Ngo.find({}); 
 
-    // Return the NGOs as JSON using NextResponse
     return NextResponse.json(ngos);
   } catch (error) {
     console.error('Error fetching NGOs:', error);
@@ -19,13 +18,10 @@ export async function GET(req) {
 //   try {
 //     await connectToDatabase(); // Ensure the database connection is established
 
-//     // Parse the request body
 //     const body = await req.json();
-    
 //     const ngo = new Ngo(body); // Create a new NGO document based on the request body
 //     await ngo.save(); // Save the new NGO to the database
 
-//     // Return the created NGO as JSON
 //     return NextResponse.json(ngo, { status: 201 });
 //   } catch (error) {
 //     console.error('Error creating NGO:', error);
