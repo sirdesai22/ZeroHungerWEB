@@ -1,13 +1,19 @@
 import { supabase } from "@/lib/supabaseClient";
 import { NextRequest, NextResponse } from "next/server";
 
+
+// GET handler for basic testing
+export async function GET() {
+    return NextResponse.json({ message: "Hello World!" }, { status: 200 });
+}
+
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json(); // Parse request body
-        const { restaurantId, available, name, quantity, veg } = body;
+        const { user_id, status, name, quantity, veg } = body;
 
         // Validate input
-        if (!restaurantId || typeof available !== "boolean" || typeof quantity !== "number" || typeof veg !== "boolean") {
+        if (!user_id || typeof status !== "boolean" || typeof quantity !== "number" || typeof veg !== "boolean") {
             return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
         }
 
@@ -15,8 +21,6 @@ export async function POST(req: NextRequest) {
         const { data: food, error } = await supabase
             .from("food")
             .insert({
-                    restaurant_id: restaurantId,
-                    available: available,
                     name: name,
                     quantity: quantity,
                     veg: veg

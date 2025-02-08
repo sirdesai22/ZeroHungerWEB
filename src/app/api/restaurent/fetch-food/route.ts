@@ -4,10 +4,12 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json(); // Parse request body
-        const { restaurantId, available } = body;
+        const { user_id } = body;
+
+        console.log(user_id);
 
         // Validate input
-        if (!restaurantId || typeof available !== "boolean") {
+        if (!user_id) {
             return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
         }
 
@@ -15,7 +17,7 @@ export async function POST(req: NextRequest) {
         const { data: foodItems, error } = await supabase
             .from("food")
             .select()
-            .eq('restaurant_id', restaurantId) // Assuming you want to filter by restaurantId
+            .eq('user_id', user_id) // Assuming you want to filter by restaurantId
 
         if (error) {
             console.error("Error fetching food items:", error);
