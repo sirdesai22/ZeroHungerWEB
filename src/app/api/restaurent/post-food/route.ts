@@ -10,7 +10,7 @@ export async function GET() {
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json(); // Parse request body
-        const { user_id, status, name, quantity, veg } = body;
+        const { user_id, status, name, quantity, veg, image } = body;
 
         // Validate input
         if (!user_id || typeof status !== "boolean" || typeof quantity !== "number" || typeof veg !== "boolean") {
@@ -21,15 +21,31 @@ export async function POST(req: NextRequest) {
         const { data: food, error } = await supabase
             .from("food")
             .insert({
-                    name: name,
-                    quantity: quantity,
-                    veg: veg
-                },
-            );
+
+                user_id: user_id,
+                status: status,
+                name: name,
+                quantity: quantity,
+                veg: veg
+            }).single();
 
         if (error) {
             console.error("Error fetching food items:", error);
             return NextResponse.json({ error: "Error fetching food items" }, { status: 500 });
+        }
+
+        const avatarFile = image;
+        const { data, error: storageError } = await supabase
+            .storage
+            .from('food-images')
+            .upload(`${food?.id}.png`, image, {
+                cacheControl: '3600',
+                upsert: false
+            })
+
+        if (storageError) {
+            console.error("Error uploading avatar:", storageError);
+            return NextResponse.json({ error: "Error uploading avatar" }, { status: 500 });
         }
 
         return NextResponse.json({ success: true, data: food }, { status: 200 });
