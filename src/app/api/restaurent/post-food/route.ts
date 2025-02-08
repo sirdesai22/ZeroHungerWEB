@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
         const { data, error: storageError } = await supabase
             .storage
             .from('food-images')
-            .upload(`${food?.id}.png`, image, {
+            .upload(`${(food as any)?.id}.png`, image, {
                 cacheControl: '3600',
                 upsert: false
             })
