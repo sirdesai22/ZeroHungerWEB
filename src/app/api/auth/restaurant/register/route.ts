@@ -3,9 +3,9 @@ import { NextRequest, NextResponse } from "next/server"
 
 export async function POST(req: NextRequest) {
     const body = await req.json();
-    const { email, password, name, phno, type, gstin, address } = body;
+    const { email, password, name, type } = body;
 
-    if (!email || !password || !name || !phno || !type || !gstin || !address) {
+    if (!email || !password || !name || !type ) {
         return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
@@ -25,9 +25,7 @@ export async function POST(req: NextRequest) {
             .insert({
                 name: name,
                 email: email,
-                phno: phno,
                 type: type,
-                gstin: gstin,
                 id: data?.user?.id
             })
             .single();
@@ -37,25 +35,9 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error }, { status: 500 });
         }
 
-        const { data: addressData, error: addressError } = await supabase
-            .from("address")
-            .insert({
-                user_id: data?.user?.id,
-                house_no: address?.house_no,
-                street: address?.street,
-                city: address?.city,
-                state: address?.state,
-                location: address?.location,
-                pincode: address?.pincode
-            })
-            .single();
-
-        if (addressError) {
-            console.error("Supabase sign-up error:", addressError);
-            return NextResponse.json({ error }, { status: 500 });
-        }
-
         return NextResponse.json({ data }, { status: 200 });
+        // return NextResponse.json({ data: "Test" }, { status: 200 });
+
 
     } catch (err) {
         console.error("General error in sign-up route:", err);
