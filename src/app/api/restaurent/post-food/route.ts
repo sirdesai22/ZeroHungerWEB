@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/supabaseClient";
 import { NextRequest, NextResponse } from "next/server";
 
+
 // GET handler for basic testing
 export async function GET() {
     return NextResponse.json({ message: "Hello World!" }, { status: 200 });
@@ -20,6 +21,7 @@ export async function POST(req: NextRequest) {
         const { data: food, error } = await supabase
             .from("food")
             .insert({
+
                 user_id: user_id,
                 status: status,
                 name: name,
