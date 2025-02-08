@@ -11,7 +11,7 @@ export default function ContactSection() {
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold tracking-tight text-zinc-800 sm:text-4xl">Get in Touch</h2>
           <p className="mt-4 text-lg leading-8 text-zinc-600">
-            Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+            Have questions? We would love to hear from you. Send us a message and we will respond as soon as possible.
           </p>
         </div>
         <div className="mx-auto mt-16 grid max-w-4xl grid-cols-1 gap-8 sm:mt-20 lg:grid-cols-2">
