@@ -10,7 +10,7 @@ export async function GET() {
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json(); // Parse request body
-        const { user_id, status, name, quantity, veg, image } = body;
+        const { user_id, status, name, quantity, price, veg, image } = body;
 
         // Validate input
         if (!user_id || typeof status !== "boolean" || typeof quantity !== "number" || typeof veg !== "boolean") {
@@ -21,12 +21,12 @@ export async function POST(req: NextRequest) {
         const { data: food, error } = await supabase
             .from("food")
             .insert({
-
                 user_id: user_id,
                 status: status,
                 name: name,
                 quantity: quantity,
-                veg: veg
+                veg: veg,
+                price: parseInt((price / 0.02).toString())
             }).single();
 
         if (error) {
