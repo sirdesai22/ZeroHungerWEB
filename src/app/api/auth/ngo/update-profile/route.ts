@@ -5,7 +5,7 @@ export async function PUT(req: NextRequest) {
     const body = await req.json();
     const { user_id, phno, address } = body;
 
-    if (!phno || !address) {
+    if (!address) {
         return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
@@ -14,7 +14,7 @@ export async function PUT(req: NextRequest) {
         const { data: user, error: userError } = await supabase
             .from("ngo")
             .update({
-                phno: phno,
+                phno: phno?phno:"007",
             })
             .eq("id", user_id)
             .single();
