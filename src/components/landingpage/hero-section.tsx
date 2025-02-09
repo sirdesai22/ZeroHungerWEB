@@ -1,7 +1,10 @@
+"use client";
 import { UtensilsCrossed, Heart } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useRouter } from "next/navigation"
 
 export default function HeroSection() {
+  const router = useRouter();
   return (
     <section className="relative overflow-hidden px-6 py-24 sm:py-32 lg:px-8">
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(45rem_50rem_at_top,theme(colors.emerald.100),white)]" />
@@ -14,14 +17,14 @@ export default function HeroSection() {
           A platform where restaurants can donate surplus food to NGOs at 10% of cost, making a difference in society
           while reducing waste.
         </p>
-        {/* <div className="mt-10 flex items-center justify-center gap-6">
-          <Button size="lg" className="gap-2 bg-emerald-600 hover:bg-emerald-700">
-            Join as Restaurant <UtensilsCrossed className="h-4 w-4" />
+        <div className="mt-10 flex items-center justify-center gap-6">
+          <Button onClick={() => {router.push('/admin/dashboard')}} size="lg" className="gap-2 bg-emerald-600 hover:bg-emerald-700">
+            Get Started <UtensilsCrossed className="h-4 w-4" />
           </Button>
-          <Button size="lg" variant="outline" className="gap-2 border-sky-600 text-sky-600 hover:bg-sky-50">
+          {/* <Button size="lg" variant="outline" className="gap-2 border-sky-600 text-sky-600 hover:bg-sky-50">
             Join as NGO <Heart className="h-4 w-4" />
-          </Button>
-        </div> */}
+          </Button> */}
+        </div>
 
         <div className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-3 lg:gap-8">
           {stats.map((stat) => (

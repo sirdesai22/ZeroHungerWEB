@@ -1,31 +1,52 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Check, X, Edit, Trash2 } from "lucide-react"
-
-// Mock data for restaurants
-const initialRestaurants = [
-  { id: 1, name: "Tasty Bites", address: "123 Main St, City", isVerified: true },
-  { id: 2, name: "Green Leaf Cafe", address: "456 Elm St, City", isVerified: false },
-  { id: 3, name: "Spice Avenue", address: "789 Oak St, City", isVerified: true },
-  { id: 4, name: "Fresh Fusion", address: "101 Pine St, City", isVerified: false },
-]
+import { supabase } from "@/lib/supabaseClient"  // Make sure to have your Supabase client setup
 
 export default function RestaurantsPage() {
-  const [restaurants, setRestaurants] = useState(initialRestaurants)
+  const [restaurants, setRestaurants] = useState([])
 
-  const toggleVerification = (id: number) => {
-    setRestaurants(
-      restaurants.map((restaurant) =>
-        restaurant.id === id ? { ...restaurant, isVerified: !restaurant.isVerified } : restaurant,
-      ),
-    )
+  useEffect(() => {
+    const fetchRestaurants = async () => {
+      const response = await fetch('/api/restaurent/all');
+      const { data, error } = await response.json();
+      if (error) {
+        console.error("Error fetching Restaurants:", error);
+      } else {
+        setRestaurants(data);
+      }
+    }
+
+    fetchRestaurants();
+  }, []);
+
+  const toggleVerification = async (id: number) => {
+    const updatedRestaurants = restaurants.map((restaurant) =>
+      restaurant.id === id ? { ...restaurant, is_verified: !restaurant.is_verified } : restaurant
+    );
+    setRestaurants(updatedRestaurants);
+
+    const { error } = await supabase
+      .from("users")
+      .update({ is_verified: !restaurants.find((restaurant) => restaurant.id === id)?.is_verified })
+      .eq("id", id);
+
+    if (error) {
+      console.error("Error updating Restaurant verification:", error);
+    }
   }
 
-  const deleteRestaurant = (id: number) => {
-    setRestaurants(restaurants.filter((restaurant) => restaurant.id !== id))
+  const deleteRestaurant = async (id: number) => {
+    const { error } = await supabase.from("users").delete().eq("id", id);
+    
+    if (error) {
+      console.error("Error deleting Restaurant:", error);
+    } else {
+      setRestaurants(restaurants.filter((restaurant) => restaurant.id !== id));
+    }
   }
 
   return (
@@ -36,7 +57,6 @@ export default function RestaurantsPage() {
         <TableHeader>
           <TableRow>
             <TableHead>Name</TableHead>
-            <TableHead>Address</TableHead>
             <TableHead>Verification Status</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
@@ -45,14 +65,13 @@ export default function RestaurantsPage() {
           {restaurants.map((restaurant) => (
             <TableRow key={restaurant.id}>
               <TableCell className="font-medium">{restaurant.name}</TableCell>
-              <TableCell>{restaurant.address}</TableCell>
               <TableCell>
                 <Button
-                  variant={restaurant.isVerified ? "default" : "outline"}
+                  variant={restaurant?.is_verified ? "default" : "outline"}
                   size="sm"
                   onClick={() => toggleVerification(restaurant.id)}
                 >
-                  {restaurant.isVerified ? (
+                  {restaurant?.is_verified ? (
                     <>
                       <Check className="mr-2 h-4 w-4" /> Verified
                     </>
@@ -65,9 +84,9 @@ export default function RestaurantsPage() {
               </TableCell>
               <TableCell>
                 <div className="flex space-x-2">
-                  <Button variant="outline" size="icon">
+                  {/* <Button variant="outline" size="icon">
                     <Edit className="h-4 w-4" />
-                  </Button>
+                  </Button> */}
                   <Button variant="destructive" size="icon" onClick={() => deleteRestaurant(restaurant.id)}>
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -80,4 +99,3 @@ export default function RestaurantsPage() {
     </div>
   )
 }
-
