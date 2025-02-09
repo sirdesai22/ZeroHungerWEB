@@ -14,14 +14,14 @@ export default function HeroSection() {
           A platform where restaurants can donate surplus food to NGOs at 10% of cost, making a difference in society
           while reducing waste.
         </p>
-        <div className="mt-10 flex items-center justify-center gap-6">
+        {/* <div className="mt-10 flex items-center justify-center gap-6">
           <Button size="lg" className="gap-2 bg-emerald-600 hover:bg-emerald-700">
             Join as Restaurant <UtensilsCrossed className="h-4 w-4" />
           </Button>
           <Button size="lg" variant="outline" className="gap-2 border-sky-600 text-sky-600 hover:bg-sky-50">
             Join as NGO <Heart className="h-4 w-4" />
           </Button>
-        </div>
+        </div> */}
 
         <div className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-3 lg:gap-8">
           {stats.map((stat) => (
