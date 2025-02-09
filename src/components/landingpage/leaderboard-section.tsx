@@ -10,15 +10,19 @@ export default function LeaderboardSection() {
   const [ngo, setNgo] = useState([]);
 
   const fetchRestaurantLeaderboard = async () => {
-    const res = await fetch("/api/restaurant/leaderboard");
-    const data = await res.json();
-    setRestaurant(data);
+    const res = await fetch("/api/ranking");
+    const {data} = await res.json();
+    console.log(data);
+    const filteredData = data.filter((item:any) => item.type === "user");
+    console.log(filteredData);
+    setRestaurant(filteredData);
   }
 
   const fetchNgoLeaderboard = async () => {
-    const res = await fetch("/api/ngo/leaderboard");
+    const res = await fetch("/api/ranking");
     const data = await res.json();
-    setNgo(data);
+    const filteredData = data.filter((item:any) => item.type === "ngo");
+    setNgo(filteredData);
   }
 
   useEffect(() => {
@@ -53,7 +57,7 @@ export default function LeaderboardSection() {
           <Card className="p-6 border-emerald-100 bg-emerald-50/50">
             <h3 className="text-2xl font-semibold mb-8 text-center text-emerald-800">Top Donor Restaurants</h3>
             <div className="space-y-6">
-              {restaurantLeaders.map((restaurant, index) => (
+              {restaurant.map((restaurant, index) => (
                 <div
                   key={restaurant.name}
                   className="flex items-center gap-4 p-4 rounded-lg bg-white shadow-sm transition-transform hover:scale-102"
@@ -68,8 +72,8 @@ export default function LeaderboardSection() {
                   <div className="flex-1 min-w-0">
                     <p className="font-medium truncate text-zinc-800">{restaurant.name}</p>
                     <div className="mt-2 flex items-center gap-2">
-                      <Progress value={restaurant.progress} className="h-2 bg-emerald-100 [&>div]:bg-emerald-500" />
-                      <span className="text-sm text-emerald-600 whitespace-nowrap">{restaurant.donations} meals</span>
+                      <Progress value={(restaurant.points / 10)} className="h-2 bg-emerald-100 [&>div]:bg-emerald-500" />
+                      <span className="text-sm text-emerald-600 whitespace-nowrap">{Math.floor(restaurant.points)} points</span>
                     </div>
                   </div>
                 </div>
