@@ -34,19 +34,18 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "Error fetching food items" }, { status: 500 });
         }
 
-        const avatarFile = image;
-        const { data, error: storageError } = await supabase
-            .storage
-            .from('food-images')
-            .upload(`${(food as any)?.id}.png`, image, {
-                cacheControl: '3600',
-                upsert: false
-            })
+        // const { data, error: storageError } = await supabase
+        //     .storage
+        //     .from('food-images')
+        //     .upload(`${(food as any)?.id}.png`, image, {
+        //         cacheControl: '3600',
+        //         upsert: false
+        //     })
 
-        if (storageError) {
-            console.error("Error uploading avatar:", storageError);
-            return NextResponse.json({ error: "Error uploading avatar" }, { status: 500 });
-        }
+        // if (storageError) {
+        //     console.error("Error uploading avatar:", storageError);
+        //     return NextResponse.json({ error: "Error uploading avatar" }, { status: 500 });
+        // }
 
         return NextResponse.json({ success: true, data: food }, { status: 200 });
     } catch (error) {

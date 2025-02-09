@@ -12,6 +12,8 @@ export async function GET(
             .from("users")
             .select()
             .eq("id", user_id)
+            .single();
+
         if (userError) {
             console.error("Error fetching user data:", userError);
             return NextResponse.json({ error: "Error fetching user data" }, { status: 500 });
@@ -21,6 +23,8 @@ export async function GET(
             .from("food")
             .select()
             .eq("user_id", user_id)
+            .single();
+            
         if (foodError) {
             console.error("Error fetching food data:", foodError);
             return NextResponse.json({ error: "Error fetching food data" }, { status: 500 });
@@ -30,6 +34,8 @@ export async function GET(
             .from("address")
             .select()
             .eq("user_id", user_id)
+            .single();
+
         if (addressError) {
             console.error("Error fetching address data:", addressError);
             return NextResponse.json({ error: "Error fetching address data" }, { status: 500 });
