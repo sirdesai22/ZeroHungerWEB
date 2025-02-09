@@ -1,8 +1,50 @@
+"use client"
 import { Medal } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
+import { useEffect, useState } from "react"
 
 export default function LeaderboardSection() {
+
+  const [restaurant, setRestaurant] = useState([]);
+  const [ngo, setNgo] = useState([]);
+
+  const fetchRestaurantLeaderboard = async () => {
+    const res = await fetch("/api/ranking");
+    const {data} = await res.json();
+    console.log(data);
+    const filteredData = data.filter((item:any) => item.type === "user");
+    console.log(filteredData);
+    setRestaurant(filteredData);
+  }
+
+  const fetchNgoLeaderboard = async () => {
+    const res = await fetch("/api/ranking");
+    const data = await res.json();
+    const filteredData = data.filter((item:any) => item.type === "ngo");
+    setNgo(filteredData);
+  }
+
+  useEffect(() => {
+      fetchRestaurantLeaderboard();
+      fetchNgoLeaderboard();
+  }, [])
+  const restaurantLeaders = [
+    { name: "The Green Kitchen", donations: "1,234", progress: 100 },
+    { name: "Pasta Paradise", donations: "956", progress: 77 },
+    { name: "Spice Garden", donations: "845", progress: 68 },
+    { name: "Fresh Bites Café", donations: "678", progress: 55 },
+    { name: "Ocean Delights", donations: "543", progress: 44 },
+  ]
+
+  const foodLeaders = [
+    { name: "The Green Kitchen", donations: "1,234", progress: 100 },
+    { name: "Pasta Paradise", donations: "956", progress: 77 },
+    { name: "Spice Garden", donations: "845", progress: 68 },
+    { name: "Fresh Bites Café", donations: "678", progress: 55 },
+    { name: "Ocean Delights", donations: "543", progress: 44 },
+  ]
+
   return (
     <section className="px-6 py-24 sm:py-32 lg:px-8 bg-white">
       <div className="mx-auto max-w-7xl">
@@ -15,7 +57,7 @@ export default function LeaderboardSection() {
           <Card className="p-6 border-emerald-100 bg-emerald-50/50">
             <h3 className="text-2xl font-semibold mb-8 text-center text-emerald-800">Top Donor Restaurants</h3>
             <div className="space-y-6">
-              {restaurantLeaders.map((restaurant, index) => (
+              {restaurant.map((restaurant, index) => (
                 <div
                   key={restaurant.name}
                   className="flex items-center gap-4 p-4 rounded-lg bg-white shadow-sm transition-transform hover:scale-102"
@@ -30,8 +72,8 @@ export default function LeaderboardSection() {
                   <div className="flex-1 min-w-0">
                     <p className="font-medium truncate text-zinc-800">{restaurant.name}</p>
                     <div className="mt-2 flex items-center gap-2">
-                      <Progress value={restaurant.progress} className="h-2 bg-emerald-100 [&>div]:bg-emerald-500" />
-                      <span className="text-sm text-emerald-600 whitespace-nowrap">{restaurant.donations} meals</span>
+                      <Progress value={(restaurant.points / 10)} className="h-2 bg-emerald-100 [&>div]:bg-emerald-500" />
+                      <span className="text-sm text-emerald-600 whitespace-nowrap">{Math.floor(restaurant.points)} points</span>
                     </div>
                   </div>
                 </div>

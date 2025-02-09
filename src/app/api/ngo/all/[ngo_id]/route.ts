@@ -12,6 +12,7 @@ export async function GET(
             .from("ngo")
             .select()
             .eq("id", ngo_id)
+            .select()
             .single();
         if (userError) {
             console.error("Error fetching user data:", userError);
@@ -31,6 +32,7 @@ export async function GET(
             .from("address")
             .select()
             .eq("user_id", ngo_id)
+            
         if (addressError) {
             console.error("Error fetching address data:", addressError);
             return NextResponse.json({ error: "Error fetching address data" }, { status: 500 });
