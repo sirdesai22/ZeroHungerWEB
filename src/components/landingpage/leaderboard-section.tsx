@@ -20,8 +20,10 @@ export default function LeaderboardSection() {
 
   const fetchNgoLeaderboard = async () => {
     const res = await fetch("/api/ranking");
-    const data = await res.json();
+    const {data} = await res.json();
+    console.log(data);
     const filteredData = data.filter((item:any) => item.type === "ngo");
+    console.log(filteredData);
     setNgo(filteredData);
   }
 
@@ -85,7 +87,7 @@ export default function LeaderboardSection() {
           <Card className="p-6 border-sky-100 bg-sky-50/50">
             <h3 className="text-2xl font-semibold mb-8 text-center text-sky-800">Most Active NGOs</h3>
             <div className="space-y-6">
-              {ngoLeaders.map((ngo, index) => (
+              {ngo.map((ngo, index) => (
                 <div
                   key={ngo.name}
                   className="flex items-center gap-4 p-4 rounded-lg bg-white shadow-sm transition-transform hover:scale-102"
@@ -100,8 +102,8 @@ export default function LeaderboardSection() {
                   <div className="flex-1 min-w-0">
                     <p className="font-medium truncate text-zinc-800">{ngo.name}</p>
                     <div className="mt-2 flex items-center gap-2">
-                      <Progress value={ngo.progress} className="h-2 bg-sky-100 [&>div]:bg-sky-500" />
-                      <span className="text-sm text-sky-600 whitespace-nowrap">{ngo.collections} pickups</span>
+                      <Progress value={(ngo.points / 10)} className="h-2 bg-sky-100 [&>div]:bg-sky-500" />
+                      <span className="text-sm text-sky-600 whitespace-nowrap">{Math.floor(ngo.points)} points</span>
                     </div>
                   </div>
                 </div>
