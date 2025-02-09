@@ -39,12 +39,12 @@ export default function Navbar() {
               </Link>
             ))}
           </div>
-          <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-4">
+          {/* <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-4">
             <Button variant="outline" className="border-sky-600 text-sky-600 hover:bg-sky-50">
               Sign in
             </Button>
             <Button className="bg-emerald-600 hover:bg-emerald-700">Get Started</Button>
-          </div>
+          </div> */}
         </div>
 
         {/* Mobile menu */}
@@ -74,12 +74,12 @@ export default function Navbar() {
                     </Link>
                   ))}
                 </div>
-                <div className="py-6 space-y-3">
+                {/* <div className="py-6 space-y-3">
                   <Button variant="outline" className="w-full border-sky-600 text-sky-600 hover:bg-sky-50">
                     Sign in
                   </Button>
                   <Button className="w-full bg-emerald-600 hover:bg-emerald-700">Get Started</Button>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
