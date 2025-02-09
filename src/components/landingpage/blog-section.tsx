@@ -60,7 +60,7 @@ const posts = [
   {
     id: 1,
     title: "Restaurant Chain Donates 10,000 Meals in First Month",
-    href: "#",
+    href: "https://sirdesaiexe.notion.site/Local-Restaurant-Chain-Spice-Route-Eats-Feeds-Thousands-in-First-Month-of-Giving-Back-Initiative-195dcc2ca7c4801eb8a3d911846c036f?pvs=4",
     description: "Local restaurant chain sets new record for food donations, helping hundreds of families in need.",
     imageUrl: "/1.webp",
     date: "Mar 16, 2024",
@@ -70,7 +70,7 @@ const posts = [
   {
     id: 2,
     title: "How Technology is Revolutionizing Food Donation",
-    href: "#",
+    href: "https://sirdesaiexe.notion.site/How-Technology-is-Revolutionizing-Food-Donation-195dcc2ca7c480599c79c1222f815fd6?pvs=4",
     description: "Discover how our platform is making it easier than ever for restaurants to connect with NGOs.",
     imageUrl: "/2.webp",
     date: "Mar 12, 2024",
@@ -80,7 +80,7 @@ const posts = [
   {
     id: 3,
     title: "NGO Spotlight: Food For All Foundation",
-    href: "#",
+    href: "https://sirdesaiexe.notion.site/NGO-Spotlight-Food-For-All-Foundation-Nourishing-Communities-One-Meal-at-a-Time-195dcc2ca7c480829e42e6b872219fa4?pvs=4",
     description: "Meet the NGO that has distributed over 50,000 meals to those in need through our platform.",
     imageUrl: "/3.webp",
     date: "Mar 9, 2024",
