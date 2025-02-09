@@ -1,8 +1,46 @@
+"use client"
 import { Medal } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
+import { useEffect, useState } from "react"
 
 export default function LeaderboardSection() {
+
+  const [restaurant, setRestaurant] = useState([]);
+  const [ngo, setNgo] = useState([]);
+
+  const fetchRestaurantLeaderboard = async () => {
+    const res = await fetch("/api/restaurant/leaderboard");
+    const data = await res.json();
+    setRestaurant(data);
+  }
+
+  const fetchNgoLeaderboard = async () => {
+    const res = await fetch("/api/ngo/leaderboard");
+    const data = await res.json();
+    setNgo(data);
+  }
+
+  useEffect(() => {
+      fetchRestaurantLeaderboard();
+      fetchNgoLeaderboard();
+  }, [])
+  const restaurantLeaders = [
+    { name: "The Green Kitchen", donations: "1,234", progress: 100 },
+    { name: "Pasta Paradise", donations: "956", progress: 77 },
+    { name: "Spice Garden", donations: "845", progress: 68 },
+    { name: "Fresh Bites Café", donations: "678", progress: 55 },
+    { name: "Ocean Delights", donations: "543", progress: 44 },
+  ]
+
+  const foodLeaders = [
+    { name: "The Green Kitchen", donations: "1,234", progress: 100 },
+    { name: "Pasta Paradise", donations: "956", progress: 77 },
+    { name: "Spice Garden", donations: "845", progress: 68 },
+    { name: "Fresh Bites Café", donations: "678", progress: 55 },
+    { name: "Ocean Delights", donations: "543", progress: 44 },
+  ]
+
   return (
     <section className="px-6 py-24 sm:py-32 lg:px-8 bg-white">
       <div className="mx-auto max-w-7xl">
