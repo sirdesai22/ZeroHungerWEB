@@ -23,7 +23,6 @@ export async function GET(
             .from("food")
             .select()
             .eq("user_id", user_id)
-            .single();
             
         if (foodError) {
             console.error("Error fetching food data:", foodError);
