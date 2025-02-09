@@ -1,27 +1,76 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Check, X, Edit, Trash2 } from "lucide-react"
-
-// Mock data for NGOs
-const initialNGOs = [
-  { id: 1, name: "Food for All", address: "234 Charity Ln, City", isVerified: true },
-  { id: 2, name: "Hunger Relief", address: "567 Hope St, City", isVerified: false },
-  { id: 3, name: "Community Pantry", address: "890 Giving Ave, City", isVerified: true },
-  { id: 4, name: "Meals on Wheels", address: "112 Care Blvd, City", isVerified: false },
-]
+import { supabase } from "@/lib/supabaseClient"
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 export default function NGOsPage() {
-  const [ngos, setNGOs] = useState(initialNGOs)
+  const [ngos, setNGOs] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [ngoData, setNgoData] = useState(null);
 
-  const toggleVerification = (id: number) => {
-    setNGOs(ngos.map((ngo) => (ngo.id === id ? { ...ngo, isVerified: !ngo.isVerified } : ngo)))
+  useEffect(() => {
+    const fetchNGOs = async () => {
+      const response = await fetch('/api/ngo/all');
+      const { data, error } = await response.json();
+      if (error) {
+        console.error("Error fetching NGOs:", error);
+      } else {
+        setNGOs(data);
+      }
+    }
+
+    fetchNGOs();
+  }, []);
+
+  const toggleVerification = async (id: number) => {
+    const updatedNGOs = ngos.map((ngo) =>
+      ngo.id === id ? { ...ngo, is_verified: !ngo.is_verified } : ngo
+    );
+    setNGOs(updatedNGOs);
+
+    const { error } = await supabase
+      .from("ngo")
+      .update({ is_verified: !ngos.find((ngo) => ngo.id === id)?.is_verified })
+      .eq("id", id);
+
+    if (error) {
+      console.error("Error updating NGO verification:", error);
+    }
   }
 
-  const deleteNGO = (id: number) => {
-    setNGOs(ngos.filter((ngo) => ngo.id !== id))
+  const editNGO = async (id: number) => {
+    const response = await supabase
+      .from("ngos")
+      .select()
+      .eq("id", id)
+      .single();
+
+    if (response.error) {
+      console.error("Error fetching NGO for editing:", response.error);
+      return;
+    }
+
+    setNgoData(response.data);
+    setIsOpen(true);
+  }
+
+  const deleteNGO = async (id: number) => {
+    const { error } = await supabase.from("ngo").delete().eq("id", id);
+
+    if (error) {
+      console.error("Error deleting NGO:", error);
+    } else {
+      setNGOs(ngos.filter((ngo) => ngo.id !== id));
+    }
+  }
+
+  const handleCloseDialog = () => {
+    setIsOpen(false);
+    setNgoData(null);
   }
 
   return (
@@ -32,7 +81,6 @@ export default function NGOsPage() {
         <TableHeader>
           <TableRow>
             <TableHead>Name</TableHead>
-            <TableHead>Address</TableHead>
             <TableHead>Verification Status</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
@@ -41,29 +89,27 @@ export default function NGOsPage() {
           {ngos.map((ngo) => (
             <TableRow key={ngo.id}>
               <TableCell className="font-medium">{ngo.name}</TableCell>
-              <TableCell>{ngo.address}</TableCell>
               <TableCell>
                 <Button
-                  variant={ngo.isVerified ? "default" : "outline"}
+                  variant={ngo?.is_verified ? "default" : "outline"}
                   size="sm"
-                  onClick={() => toggleVerification(ngo.id)}
+                  onClick={() => {
+                    toggleVerification(ngo.id);
+                  }}
                 >
-                  {ngo.isVerified ? (
+                  {ngo?.is_verified ? (
                     <>
                       <Check className="mr-2 h-4 w-4" /> Verified
                     </>
                   ) : (
                     <>
-                      <X className="mr-2 h-4 w-4" /> Unverified
+                      <X className="mr-2 h-4 w-4 bgblack" /> Unverified
                     </>
                   )}
                 </Button>
               </TableCell>
               <TableCell>
                 <div className="flex space-x-2">
-                  <Button variant="outline" size="icon">
-                    <Edit className="h-4 w-4" />
-                  </Button>
                   <Button variant="destructive" size="icon" onClick={() => deleteNGO(ngo.id)}>
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -73,7 +119,24 @@ export default function NGOsPage() {
           ))}
         </TableBody>
       </Table>
+
+      <Dialog open={isOpen} onOpenChange={handleCloseDialog}>
+        <DialogContent>
+          <DialogTitle>Edit NGO</DialogTitle>
+          <DialogDescription>
+            {/* Add form fields here to edit the NGO data */}
+            <input
+              type="text"
+              value={ngoData?.name || ''}
+              onChange={(e) => setNgoData({ ...ngoData, name: e.target.value })}
+              placeholder="NGO Name"
+              className="mb-4 p-2 border"
+            />
+            {/* Add other fields as necessary */}
+          </DialogDescription>
+          <Button onClick={handleCloseDialog}>Save</Button>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
-
