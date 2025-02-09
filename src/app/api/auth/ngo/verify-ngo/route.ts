@@ -3,9 +3,9 @@ import { NextRequest, NextResponse } from "next/server"
 
 export async function PUT(req: NextRequest) {
     const body = await req.json();
-    const { user_id, phno, address } = body;
+    const { user_id, unique_key } = body;
 
-    if (!phno || !address) {
+    if (!unique_key) {
         return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
@@ -14,7 +14,7 @@ export async function PUT(req: NextRequest) {
         const { data: user, error: userError } = await supabase
             .from("ngo")
             .update({
-                phno: phno,
+                unique_key: unique_key,
             })
             .eq("id", user_id)
             .single();
@@ -22,24 +22,6 @@ export async function PUT(req: NextRequest) {
         if (userError) {
             console.error("Supabase sign-up error:", userError);
             return NextResponse.json({ userError }, { status: 500 });
-        }
-
-        const { data: addressData, error: addressError } = await supabase
-            .from("address")
-            .insert({
-                user_id: user_id,
-                house_no: address?.house_no,
-                street: address?.street,
-                city: address?.city,
-                state: address?.state,
-                location: address?.location,
-                pincode: address?.pincode
-            })
-            .single();
-
-        if (addressError) {
-            console.error("Supabase sign-up error:", addressError);
-            return NextResponse.json({ addressError }, { status: 500 });
         }
 
         return NextResponse.json({ user }, { status: 200 });
